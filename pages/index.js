@@ -8,14 +8,17 @@ export default function Home() {
   const [matchedName, setMatchedName] = useState("")
 
   const addUser = async () => {
-    await axios.post("https://my-backend-bjo3.onrender.com", { name })
+    await axios.post("https://my-backend-bjo3.onrender.com/addUser", { name })
     setName("")
   }
 
   const matchUser = async () => {
-    const response = await axios.post("https://my-backend-bjo3.onrender.com", {
-      selectedName,
-    })
+    const response = await axios.post(
+      "https://my-backend-bjo3.onrender.com/matchUser",
+      {
+        selectedName,
+      }
+    )
     setMatchedName(response.data.matched)
   }
 
