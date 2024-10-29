@@ -1,46 +1,44 @@
-// frontend/pages/index.js
+// pages/index.js
 import { useState } from "react"
-import { createGroup, matchManitto } from "../lib/api"
+import axios from "axios"
 
 export default function Home() {
-  const [groupName, setGroupName] = useState("")
-  const [groupId, setGroupId] = useState("")
+  const [name, setName] = useState("")
+  const [selectedName, setSelectedName] = useState("")
+  const [matchedName, setMatchedName] = useState("")
 
-  const handleCreateGroup = async () => {
-    try {
-      const response = await createGroup(groupName)
-      setGroupId(response.data._id)
-      alert("그룹이 생성되었습니다.")
-    } catch (error) {
-      console.error(error)
-    }
+  const addUser = async () => {
+    await axios.post("https://my-backend-bjo3.onrender.com", { name })
+    setName("")
   }
 
-  const handleMatchManitto = async () => {
-    try {
-      await matchManitto(groupId)
-      alert("매칭이 완료되었습니다.")
-    } catch (error) {
-      console.error(error)
-    }
+  const matchUser = async () => {
+    const response = await axios.post("https://my-backend-bjo3.onrender.com", {
+      selectedName,
+    })
+    setMatchedName(response.data.matched)
   }
 
   return (
     <div>
-      <h1>마니또 서비스</h1>
+      <h1>마니또 웹 서비스</h1>
+      <h2>사용자 추가</h2>
       <input
-        type="text"
-        value={groupName}
-        onChange={(e) => setGroupName(e.target.value)}
-        placeholder="그룹 이름"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="이름을 입력하세요"
       />
-      <button onClick={handleCreateGroup}>그룹 생성</button>
+      <button onClick={addUser}>추가</button>
 
-      {groupId && (
-        <div>
-          <button onClick={handleMatchManitto}>마니또 매칭</button>
-        </div>
-      )}
+      <h2>사용자 매칭</h2>
+      <input
+        value={selectedName}
+        onChange={(e) => setSelectedName(e.target.value)}
+        placeholder="선택한 이름"
+      />
+      <button onClick={matchUser}>매칭</button>
+
+      {matchedName && <h3>매칭된 사용자: {matchedName}</h3>}
     </div>
   )
 }
